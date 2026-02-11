@@ -9,6 +9,26 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true
+  },
+   fullName: {
+    type: String
+  },
+
+  dob: {
+    type: Date
+  },
+
+  sex: {
+    type: String,
+    enum: ['Male', 'Female', 'Other']
+  },
+
+  qualification: {
+    type: String
+  },
+
+  photo: {
+    type: String   // Base64 string
   }
 }, { timestamps: true });
 
