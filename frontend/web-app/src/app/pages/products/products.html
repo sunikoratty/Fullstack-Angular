@@ -1,0 +1,146 @@
+<div class="container mt-4">
+
+    <div class="card p-4 mb-4">
+        <h4>{{ editingId ? 'Edit Product' : 'Add Product' }}</h4>
+
+        <form [formGroup]="form" (ngSubmit)="save()">
+
+            <div class="row mb-3">
+                <div class="col-md-6 my-auto">
+
+                    <label>Name</label>
+                    <input class="form-control" formControlName="name">
+
+                </div>
+                <div class="col-md-6">
+
+                    <label>Description</label>
+                    <textarea class="form-control" formControlName="description"></textarea>
+
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+
+                    <label>Price</label>
+                    <input type="number" class="form-control" formControlName="price">
+
+                </div>
+                <div class="col-md-6">
+
+                    <label>Category</label>
+                    <select class="form-select" formControlName="category">
+                        <option>Electronics</option>
+                        <option>Clothing</option>
+                        <option>Books</option>
+                    </select>
+
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+
+                    <label>Status</label><br>
+                    <input type="radio" value="Active" formControlName="status"> Active
+                    <input type="radio" value="Inactive" formControlName="status"> Inactive
+
+                </div>
+                <div class="col-md-6">
+
+                    <label>Tags</label><br>
+                    <input type="checkbox" [checked]="form.value.tags?.includes('New')"
+                        (change)="toggleTag('New', $event)">
+                    New
+
+                    <input type="checkbox" [checked]="form.value.tags?.includes('Featured')"
+                        (change)="toggleTag('Featured', $event)"> Featured
+
+                    <input type="checkbox" [checked]="form.value.tags?.includes('Sale')"
+                        (change)="toggleTag('Sale', $event)"> Sale
+
+                </div>
+            </div>
+
+
+
+            <div class="d-flex justify-content-center">
+                <button class="btn btn-primary">
+                    {{ editingId ? 'Update' : 'Save' }}
+                </button>
+                <button class="btn btn-secondary ms-2"
+                    (click)="form.reset({ status: 'Active', category: 'Electronics', tags: [] }); editingId = null;">Clear</button>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="card">
+        <p>Total products: {{ products.length }}</p>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th>Category</th>
+                    <th>Tags</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let p of products">
+                    <td>{{ p.name }}</td>
+                    <td>{{ p.price }}</td>
+                    <td>{{ p.status }}</td>
+                    <td>{{ p.category }}</td>
+                    <td>@for(tag of p.tags; track tag) {
+                        <span class="badge bg-secondary me-1">{{ tag }}</span>
+                        }
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-warning me-2" (click)="edit(p)">Edit</button>
+
+                        <button class="btn btn-sm btn-danger" (click)="delete(p._id)">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+                <label>Rows per page:</label>
+                <select [(ngModel)]="limit" (change)="changePage(1)" class="form-select d-inline w-auto ms-2">
+                    <option [value]="5">5</option>
+                    <option [value]="10">10</option>
+                    <option [value]="20">20</option>
+                </select>
+            </div>
+
+            <div>
+                <button class="btn btn-sm btn-secondary me-2" [disabled]="page === 1"
+                    (click)="changePage(page - 1)">Prev</button>
+
+                Page {{ page }}
+
+                <button class="btn btn-sm btn-secondary ms-2" [disabled]="page * limit >= total"
+                    (click)="changePage(page + 1)">Next</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <app-modal [title]="'Confirm Delete'" [visible]="showDeleteModal" confirmText="Yes, Delete"
+        (confirmed)="deleteConfirmed()" (closed)="showDeleteModal = false">
+
+        Are you sure you want to delete this product?
+
+    </app-modal>
+
+</div>

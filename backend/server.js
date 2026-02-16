@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const profileRoutes = require('./routes/profileRoutes');
+const productRoutes = require('./routes/productRoutes');
 require('dotenv').config();
 
 const app = express();
@@ -24,3 +25,4 @@ const authRoutes = require('./routes/authRoutes');
 
 app.use('/api', authRoutes);
 app.use('/api', profileRoutes);
+app.use('/api', productRoutes);
