@@ -17,5 +17,7 @@
         <div class="mt-3 text-center">
             <a routerLink="/login">Back to Login</a>
         </div>
+        <app-alert [message]="alertMessage()" [type]="alertType()">
+        </app-alert>
     </div>
 </div>

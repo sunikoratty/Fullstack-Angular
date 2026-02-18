@@ -22,9 +22,6 @@ export class Login {
       phone: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
       password: ['', [Validators.required, Validators.minLength(4)]]
     });
-
-    // this.alertMessage = 'login successful!';
-    // this.alertType = 'success';
   }
 
 
@@ -45,9 +42,9 @@ export class Login {
           this.router.navigate(['/dashboard']);
         }, 3000);
       },
-      error: () => {
+      error: (err) => {
         this.alertType.set('danger');
-        this.alertMessage.set('Login failed!');
+        this.alertMessage.set(err.error?.message || 'Login failed. Please check your credentials.');
         setTimeout(() => {
           this.alertMessage.set('')
         }, 3000);

@@ -6,7 +6,10 @@ exports.createProduct = async (req, res) => {
   try {
     const product = new Product(req.body);
     await product.save();
-    res.status(201).json(product);
+    res.status(201).json({
+      message: 'Product saved successfully',
+      data: product
+    });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -53,7 +56,10 @@ exports.updateProduct = async (req, res) => {
       return res.status(404).json({ message: 'Product not found' });
     }
 
-    res.json(updated);
+    res.json({
+      message: 'Product updated successfully',
+      data: updated
+    });
 
   } catch (error) {
     res.status(400).json({ message: error.message });

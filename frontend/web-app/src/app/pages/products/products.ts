@@ -1,12 +1,13 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { ChangeDetectorRef, Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Product } from '../../services/product';
 import { Modal } from '../../shared/modal/modal/modal';
+import { Alert } from '../../shared/alert/alert/alert';
 
 @Component({
   selector: 'app-products',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, Modal],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, Modal, Alert],
   templateUrl: './products.html',
   styleUrl: './products.css',
 })
@@ -34,6 +35,9 @@ export class Products implements OnInit {
     tags: [[] as string[], Validators.required],
   });
 
+  alertMessage = signal('');
+  alertType = signal<'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info'>('primary');
+
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
       this.loadProducts();
@@ -58,13 +62,33 @@ export class Products implements OnInit {
         .subscribe(() => {
           this.editingId = null;
           this.form.reset({ status: 'Active', category: 'Electronics', tags: [] });
-          this.loadProducts();
+          this.alertType.set('success');
+          this.alertMessage.set('Product updated successfully!');
+          setTimeout(() => {
+            this.alertMessage.set('');
+            this.loadProducts();
+          }, 3000);
         });
     } else {
       this.productService.createProduct(this.form.value)
-        .subscribe(() => {
-          this.form.reset({ status: 'Active', category: 'Electronics', tags: [] });
-          this.loadProducts();
+        .subscribe((res: any) => {
+          if (res.message === 'Product saved successfully') {
+            this.alertType.set('success');
+            this.alertMessage.set('Product created successfully!');
+            this.form.reset({ status: 'Active', category: 'Electronics', tags: [] });
+            setTimeout(() => {
+              this.alertMessage.set('');
+              this.loadProducts();
+            }, 3000);
+          }
+          else {
+            this.alertType.set('danger');
+            this.alertMessage.set('Failed to create product.');
+          }
+        }, error => {
+          console.error('Error creating product:', error);
+          this.alertType.set('danger');
+          this.alertMessage.set('An error occurred while creating the product.');
         });
     }
   }
@@ -83,16 +107,28 @@ export class Products implements OnInit {
 
     this.selectedId = id;
     this.showDeleteModal = true;
-   
+
   }
 
   deleteConfirmed() {
     if (!this.selectedId) return;
 
     this.productService.deleteProduct(this.selectedId)
-      .subscribe(() => {
-        this.loadProducts();
-        this.showDeleteModal = false;
+      .subscribe((res: any) => {
+        console.log('Delete response:', res);
+        if (res.message === 'Deleted successfully') {
+          this.alertType.set('success');
+          this.alertMessage.set('Product deleted successfully!');
+          setTimeout(() => {
+            this.alertMessage.set('');
+            this.loadProducts();
+            this.showDeleteModal = false;
+          }, 3000);
+
+        } else {
+          this.alertType.set('danger');
+          this.alertMessage.set('Failed to delete product.');
+        }
       });
   }
 
