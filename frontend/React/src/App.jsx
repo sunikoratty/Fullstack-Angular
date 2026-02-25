@@ -7,6 +7,7 @@ import Products from "./pages/Products";
 import './App.css'
 import Register from "./pages/register";
 import Login from "./pages/Login";
+import ReduxProducts from "./pages/ReduxProducts";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="profile" element={<Profile />} />
             <Route path="products" element={<Products />} />
+            <Route path="redux-products" element={<ReduxProducts />} />
           </Route>
         </Route>
       </Routes>

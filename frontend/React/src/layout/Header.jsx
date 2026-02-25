@@ -13,7 +13,7 @@ function Header() {
       className="bg-white shadow-sm d-flex justify-content-between align-items-center px-4"
       style={{ height: "60px" }}
     >
-      <h6 className="mb-0">Dashboard</h6>
+       <i className="bi bi-speedometer2 mb-0"></i>
 
       <button className="btn btn-outline-danger btn-sm" onClick={logout}>
         <i className="bi bi-box-arrow-right me-1"></i>

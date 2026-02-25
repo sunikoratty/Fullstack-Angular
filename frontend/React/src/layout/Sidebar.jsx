@@ -4,8 +4,7 @@ function Sidebar() {
   const location = useLocation();
 
   const linkClass = (path) =>
-    `list-group-item list-group-item-action ${
-      location.pathname === path ? "active" : ""
+    `list-group-item list-group-item-action ${location.pathname === path ? "active" : ""
     }`;
 
   return (
@@ -26,6 +25,11 @@ function Sidebar() {
         <Link to="/dashboard/products" className={linkClass("/dashboard/products")}>
           <i className="bi bi-box me-2"></i>
           Products
+        </Link>
+        <hr />
+        <Link to="/dashboard/redux-products" className={linkClass("/dashboard/redux-products")}>
+          <i className="bi bi-box me-2"></i>
+          Redux Products
         </Link>
       </div>
     </div>
